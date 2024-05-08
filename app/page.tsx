@@ -52,7 +52,7 @@ export default function Home() {
 
   const sendMessage = () => {
     console.log(code, clipboardData);
-    kv.setKey(String(code), clipboardData)
+    kv.setKey({ key: String(codeInput), text: clipboardData })
     toggleModal();
   };
 
