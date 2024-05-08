@@ -57,7 +57,7 @@ export default function Home() {
   };
 
   const receive = () => {
-    const data = kv.getKey(String(codeInput))
+    const data = kv.getKey({key: String(codeInput)})
     console.log(data)
     console.log(codeInput);
   };
