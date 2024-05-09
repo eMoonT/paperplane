@@ -26,12 +26,9 @@ const getKey = async ({ key }: getKeyProps): Promise<string | null> => {
         console.error(err);
         return null;
       });
-    if (res?.error) {
-      return null;
-    }
-    return res;
+    return res as string;
   } else {
-    const data = await KV_TEST.get(key);
+    const data = await KV_TEST?.get(key);
     return data ?? null;
   }
 };
@@ -68,9 +65,9 @@ const setKey = async ({
         console.error(err);
         return null;
       });
-    return res;
+    return res as string;
   } else {
-    await KV_TEST.put(key, text, { expiration: expiration });
+    await KV_TEST?.put(key, text, { expiration: expiration });
     return "true";
   }
 };
