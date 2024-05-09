@@ -56,8 +56,8 @@ export default function Home() {
     toggleModal();
   };
 
-  const receive = () => {
-    const data = kv.getKey({key: String(codeInput)})
+  const receive = async () => {
+    const data = await kv.getKey({key: String(codeInput)})
     console.log(data)
     console.log(codeInput);
   };

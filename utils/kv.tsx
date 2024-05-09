@@ -42,7 +42,7 @@ interface setKeyProps {
 const setKey = async ({
   key,
   text,
-  expiration = 60,
+  expiration = 360,
 }: setKeyProps): Promise<string | null> => {
   if (process.env.NODE_ENV == "development") {
     const form = new FormData();
