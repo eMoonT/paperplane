@@ -5,7 +5,11 @@ import { useEffect, useState } from "react";
 
 import BoardModal from "@/components/board-modal";
 import CodeModal from "@/components/code-modal";
-import { kv } from "@/utils/kv";
+// import { kv } from "@/utils/kv";
+import { KVNamespace } from '@cloudflare/workers-types'
+import { kill } from "process";
+
+export const runtime = "experimental-edge";
 
 function getRandomNumberBetween(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -13,6 +17,8 @@ function getRandomNumberBetween(min: number, max: number): number {
 
 export default function Home() {
   const code = getRandomNumberBetween(1000, 9999);
+
+  const { KV_TEST } = process.env as unknown as { KV_TEST: KVNamespace}
 
   const [clipboardData, setClipboardData] = useState<string>("");
   const [codeInput, setCodeInput] = useState<number>(0);
@@ -50,14 +56,16 @@ export default function Home() {
     setIsCodeModalOpen((prev) => !prev);
   };
 
-  const sendMessage = () => {
+  const sendMessage = async () => {
     console.log(code, clipboardData);
-    kv.setKey({ key: String(codeInput), text: clipboardData })
+    // kv.setKey({ key: String(codeInput), text: clipboardData })
+    await KV_TEST?.put(String(code),clipboardData)
     toggleModal();
   };
 
   const receive = async () => {
-    const data = await kv.getKey({key: String(codeInput)})
+    // const data = await kv.getKey({key: String(codeInput)})
+    const data = await KV_TEST?.get(String(codeInput))
     console.log(data)
     console.log(codeInput);
   };
