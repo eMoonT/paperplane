@@ -7,9 +7,8 @@ import BoardModal from "@/components/board-modal";
 import CodeModal from "@/components/code-modal";
 // import { kv } from "@/utils/kv";
 import { KVNamespace } from '@cloudflare/workers-types'
-import { kill } from "process";
 
-export const runtime = "experimental-edge";
+// export const runtime = "experimental-edge";
 
 function getRandomNumberBetween(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
