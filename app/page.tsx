@@ -1,31 +1,50 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import BoardModal from "@/components/board-modal";
 import CodeModal from "@/components/code-modal";
-// import { kv } from "@/utils/kv";
-import { KVNamespace } from '@cloudflare/workers-types'
+import LinkModal from "@/components/link-modal";
+import ContentModal from "@/components/content-modal";
+import { KVNamespace } from "@cloudflare/workers-types";
+import axios from "axios";
+import toast from "react-hot-toast";
 
-// export const runtime = "edge";
+let CODE_NUM = 0;
+const BASE_URL = 'https://pp.xingmel.top'
 
 export interface Env {
   KV_TEST: KVNamespace;
+  BASE_URL: string;
 }
 
 function getRandomNumberBetween(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
-export default function Home() {
-  const code = getRandomNumberBetween(1000, 9999);
+async function validCode() {
+  console.log("code重复, 重新生成code");
+  let isDone = false;
+  while (!isDone) {
+    const res = await axios.get(`http://localhost:8788/api/hello/${CODE_NUM}`);
+    if (res.data.status === 0) {
+      CODE_NUM = getRandomNumberBetween(1000, 9999);
+    } else if ((res.data.status = 1)) {
+      isDone = true;
+    }
+  }
+}
 
-  const { KV_TEST } = process.env as unknown as { KV_TEST: KVNamespace}
+export default function Home() {
+  CODE_NUM = getRandomNumberBetween(1000, 9999);
+  // const { KV_TEST } = process.env as unknown as { KV_TEST: KVNamespace}
 
   const [clipboardData, setClipboardData] = useState<string>("");
   const [codeInput, setCodeInput] = useState<number>(0);
   const [isWatching, setIsWatching] = useState<boolean>(false);
+  const dataContentRef = useRef(null);
+  const codeRef = useRef<number>(0);
 
   useEffect(() => {
     if (!isWatching) {
@@ -47,6 +66,8 @@ export default function Home() {
 
   const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
   const [isCodeModalOpen, setIsCodeModalOpen] = useState<boolean>(false);
+  const [isLinkModalOpen, setIsLinkModalOpen] = useState<boolean>(false);
+  const [isContentModalOpen, setIsContentModalOpen] = useState<boolean>(false);
 
   const toggleModal = () => {
     setIsWatching(!isWatching);
@@ -59,20 +80,41 @@ export default function Home() {
     setIsCodeModalOpen((prev) => !prev);
   };
 
+  const toggleLinkModal = () => {
+    setIsLinkModalOpen((prev) => !prev);
+  };
+
+  const toggleContentModal = () => {
+    setIsContentModalOpen((prev) => !prev);
+  };
+
   const sendMessage = async () => {
-    console.log(code, clipboardData);
-    // kv.setKey({ key: String(codeInput), text: clipboardData })
-    await KV_TEST?.put(String(code),clipboardData)
-    const res = await KV_TEST?.get(String(code))
-    console.log(res)
+    validCode();
+
+    const data = {
+      code: CODE_NUM,
+      text: clipboardData,
+    };
+
+    codeRef.current = CODE_NUM;
+
+    await axios.post(`${BASE_URL}/api/v1/${CODE_NUM}`, data);
     toggleModal();
+    toggleLinkModal();
   };
 
   const receive = async () => {
-    // const data = await kv.getKey({key: String(codeInput)})
-    const data = await KV_TEST?.get(String(codeInput))
-    console.log(data)
-    console.log(codeInput);
+    const res = await axios.get(`${BASE_URL}/api/v1/${codeInput}`);
+
+    if (res.data.status === 0) {
+      setClipboardData(res.data.value);
+      toggleCodeModal();
+      toggleContentModal();
+      dataContentRef.current = res.data;
+    }
+    if (res.data.status === 1) {
+      toast.error("提取码不存在")
+    }
   };
   return (
     <>
@@ -107,6 +149,16 @@ export default function Home() {
           onClose={toggleCodeModal}
         />
       </div>
+      <LinkModal
+        isOpen={isLinkModalOpen}
+        onClose={toggleLinkModal}
+        code={codeRef.current}
+      />
+      <ContentModal
+        isOpen={isContentModalOpen}
+        onClose={toggleContentModal}
+        data={dataContentRef.current}
+      />
     </>
   );
 }
