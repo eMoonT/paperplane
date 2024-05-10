@@ -8,7 +8,11 @@ import CodeModal from "@/components/code-modal";
 // import { kv } from "@/utils/kv";
 import { KVNamespace } from '@cloudflare/workers-types'
 
-// export const runtime = "experimental-edge";
+// export const runtime = "edge";
+
+export interface Env {
+  KV_TEST: KVNamespace;
+}
 
 function getRandomNumberBetween(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -59,6 +63,8 @@ export default function Home() {
     console.log(code, clipboardData);
     // kv.setKey({ key: String(codeInput), text: clipboardData })
     await KV_TEST?.put(String(code),clipboardData)
+    const res = await KV_TEST?.get(String(code))
+    console.log(res)
     toggleModal();
   };
 
