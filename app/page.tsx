@@ -27,7 +27,7 @@ async function validCode() {
   console.log("code重复, 重新生成code");
   let isDone = false;
   while (!isDone) {
-    const res = await axios.get(`http://localhost:8788/api/hello/${CODE_NUM}`);
+    const res = await axios.get(`${BASE_URL}/api/hello/${CODE_NUM}`);
     if (res.data.status === 0) {
       CODE_NUM = getRandomNumberBetween(1000, 9999);
     } else if ((res.data.status = 1)) {
