@@ -12,7 +12,7 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 let CODE_NUM = 0;
-const BASE_URL = 'https://pp.xingmel.top'
+const BASE_URL = "https://pp.xingmel.top";
 
 export interface Env {
   KV_TEST: KVNamespace;
@@ -27,7 +27,7 @@ async function validCode() {
   console.log("code重复, 重新生成code");
   let isDone = false;
   while (!isDone) {
-    const res = await axios.get(`${BASE_URL}/api/hello/${CODE_NUM}`);
+    const res = await axios.get(`${BASE_URL}/api/v1/${CODE_NUM}`);
     if (res.data.status === 0) {
       CODE_NUM = getRandomNumberBetween(1000, 9999);
     } else if ((res.data.status = 1)) {
@@ -76,6 +76,7 @@ export default function Home() {
   };
 
   const toggleCodeModal = () => {
+    setIsWatching(!isWatching);
     setCodeInput(0);
     setIsCodeModalOpen((prev) => !prev);
   };
@@ -113,16 +114,28 @@ export default function Home() {
       dataContentRef.current = res.data;
     }
     if (res.data.status === 1) {
-      toast.error("提取码不存在")
+      toast.error("提取码不存在");
     }
+  };
+
+  const themeToggle = () => {
+    document.body.classList.toggle("dark");
   };
   return (
     <>
-      <div className="flex justify-center items-center h-screen flex-col gap-y-3 bg-black">
-        <h1 className="text-3xl text-white font-bold">paperplane</h1>
+      <div className="flex justify-center items-center h-screen flex-col gap-y-3 bg-white dark:bg-black">
+        <button
+          className="absolute top-5 right-5 text-5xl xs:text-3xl dark:text-white text-black outline-none active:animate-spin"
+          onClick={themeToggle}
+        >
+          ＊
+        </button>
+        <h1 className="text-3xl text-gray-800 dark:text-white font-bold">
+          PaperPlane
+        </h1>
         <button
           type="button"
-          className="mt-32 relative inline-flex items-center justify-center w-[200px] h-12 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+          className="mt-32 relative inline-flex items-center justify-center w-[200px] h-12 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
           onClick={toggleModal}
         >
           发送
@@ -136,7 +149,7 @@ export default function Home() {
         />
         <button
           type="button"
-          className="relative inline-flex items-center justify-center w-[200px] h-12 bg-gray-800 text-blue-800 rounded-md shadow-md hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-700"
+          className="relative inline-flex items-center justify-center w-[200px] h-12 dark:bg-gray-800 dark:text-blue-800 bg-white hover:bg-gray-100 text-blue-500 rounded-md shadow-md"
           onClick={toggleCodeModal}
         >
           接收
@@ -148,17 +161,22 @@ export default function Home() {
           isOpen={isCodeModalOpen}
           onClose={toggleCodeModal}
         />
+        <LinkModal
+          isOpen={isLinkModalOpen}
+          onClose={toggleLinkModal}
+          code={codeRef.current}
+        />
+        <ContentModal
+          isOpen={isContentModalOpen}
+          onClose={toggleContentModal}
+          data={dataContentRef.current}
+        />
+        <span className="absolute bottom-2 dark:text-gray-300 text-gray-500 text-sm">
+          © 2024{" "}
+          <a href="https://www.github.com/eMoonT/paperplane">PaperPlane{"  "} •</a>{"  "}
+          Engine by <a href="https://cloudflare.com">Cloudflare Pages</a>
+        </span>
       </div>
-      <LinkModal
-        isOpen={isLinkModalOpen}
-        onClose={toggleLinkModal}
-        code={codeRef.current}
-      />
-      <ContentModal
-        isOpen={isContentModalOpen}
-        onClose={toggleContentModal}
-        data={dataContentRef.current}
-      />
     </>
   );
 }
