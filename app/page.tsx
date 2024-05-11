@@ -11,8 +11,11 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 let CODE_NUM = 0;
-// const BASE_URL = "https://pp.xingmel.top";
-const BASE_URL = "http://localhost:8788";
+
+let BASE_URL = ''
+if (process.env.NODE_ENV === "development") {
+  BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
+}
 
 export interface Env {
   KV_TEST: KVNamespace;

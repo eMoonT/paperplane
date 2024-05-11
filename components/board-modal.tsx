@@ -33,7 +33,7 @@ const BoardModal: React.FC<BoardModalProps> = ({
           isOpen ? "bg-gray-900 bg-opacity-75" : "hidden"
         }`}
       >
-        <div className="xs:w-[480px] w-4/5 py-2 px-4 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-xl shadow-xl flex flex-col justify-center items-center fixed">
+        <div className="xs:w-[480px] w-4/5 h-2/5 py-2 px-4 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-xl shadow-xl flex flex-col justify-center items-center fixed">
           {/* 模态框内容 */}
           <button
             onClick={onClose}
@@ -60,7 +60,7 @@ const BoardModal: React.FC<BoardModalProps> = ({
             </span>
             <button
               onClick={ () => {sendMessage(expire);setExpire(7)}}
-              className="relative inline-flex items-center justify-center w-[90px] h-10 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              className="relative inline-flex items-center justify-center w-[60px] xs:w-[90px] h-10 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
             >
               发送
             </button>
