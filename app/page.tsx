@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 
 import BoardModal from "@/components/board-modal";
@@ -12,7 +11,8 @@ import axios from "axios";
 import toast from "react-hot-toast";
 
 let CODE_NUM = 0;
-const BASE_URL = "https://pp.xingmel.top";
+// const BASE_URL = "https://pp.xingmel.top";
+const BASE_URL = "http://localhost:8788";
 
 export interface Env {
   KV_TEST: KVNamespace;
@@ -92,12 +92,14 @@ export default function Home() {
     setIsContentModalOpen((prev) => !prev);
   };
 
-  const sendMessage = async () => {
+  const sendMessage = async (expire: number) => {
     validCode();
+    console.log(expire)
 
     const data = {
       code: CODE_NUM,
       text: clipboardData,
+      expire
     };
 
     codeRef.current = CODE_NUM;
@@ -122,16 +124,14 @@ export default function Home() {
   };
 
   const themeToggle = () => {
-    console.log(theme)
     const newTheme = theme === "light" ? "dark" : "light";
-    console.log(newTheme)
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
   };
 
   useEffect(() => {
-    console.log(localStorage.getItem('theme'))
-    const getTheme = localStorage.getItem("theme") || 'light';
+    const getTheme = localStorage.getItem("theme") || "light";
+    setTheme(getTheme);
     document.body.className = getTheme;
   }, [theme]);
 
