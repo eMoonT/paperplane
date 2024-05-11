@@ -43,6 +43,9 @@ export default function Home() {
   const [clipboardData, setClipboardData] = useState<string>("");
   const [codeInput, setCodeInput] = useState<number>(0);
   const [isWatching, setIsWatching] = useState<boolean>(false);
+
+  const [theme, setTheme] = useState<string>("");
+
   const dataContentRef = useRef(null);
   const codeRef = useRef<number>(0);
 
@@ -119,8 +122,19 @@ export default function Home() {
   };
 
   const themeToggle = () => {
-    document.body.classList.toggle("dark");
+    console.log(theme)
+    const newTheme = theme === "light" ? "dark" : "light";
+    console.log(newTheme)
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
   };
+
+  useEffect(() => {
+    console.log(localStorage.getItem('theme'))
+    const getTheme = localStorage.getItem("theme") || 'light';
+    document.body.className = getTheme;
+  }, [theme]);
+
   return (
     <>
       <div className="flex justify-center items-center h-screen flex-col gap-y-3 bg-white dark:bg-black">
@@ -173,7 +187,10 @@ export default function Home() {
         />
         <span className="absolute bottom-2 dark:text-gray-300 text-gray-500 text-sm">
           © 2024{" "}
-          <a href="https://www.github.com/eMoonT/paperplane">PaperPlane{"  "} •</a>{"  "}
+          <a href="https://www.github.com/eMoonT/paperplane">
+            PaperPlane{"  "} •
+          </a>
+          {"  "}
           Engine by <a href="https://cloudflare.com">Cloudflare Pages</a>
         </span>
       </div>
