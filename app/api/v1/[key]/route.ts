@@ -46,7 +46,7 @@ export async function POST(
 
     await MY_KV.put(code, text, {
       expirationTtl: secendTime,
-      metadata: { expire: formattedTime },
+      metadata: { expireTime: formattedTime, content: text },
     });
     return NextResponse.json({
       key: code,

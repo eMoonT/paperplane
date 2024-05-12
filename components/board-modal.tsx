@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { X } from 'lucide-react'
 
 interface BoardModalProps {
   isOpen: boolean;
@@ -35,12 +36,8 @@ const BoardModal: React.FC<BoardModalProps> = ({
       >
         <div className="xs:w-[480px] w-4/5 h-2/5 py-2 px-4 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-xl shadow-xl flex flex-col justify-center items-center fixed">
           {/* 模态框内容 */}
-          <button
-            onClick={onClose}
-            className="absolute right-5 top-4 text-gray-600 dark:text-gray-300"
-          >
-            关闭
-          </button>
+          <X size={24} onClick={onClose} className="absolute right-5 top-4 text-gray-600 dark:text-gray-300 cursor-pointer"/>
+
           <h1 className="text-gray-700 dark:text-white py-2">发送文本</h1>
           <textarea
             name="t1"

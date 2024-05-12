@@ -1,46 +1,39 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
+import Panel from "./components/panel";
+import KeysContent from "./components/keys-content";
+import getAdmin from "@/actions/get-admin";
+import { KeysItem } from "@/types";
+
+import { useEffect, useReducer, useState } from "react";
 
 const Admin = () => {
-  const [isMounted, setIsMounted] = useState<boolean>(false);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [data, setData] = useState<KeysItem>({ keys: [], total: 0 });
+
+  const [loading, setLoading] = useState<boolean>(true);
+  const [count, setCount] = useState<number>(0);
 
   useEffect(() => {
-    setIsMounted(true);
-  }, []);
-
-  if (!isMounted) {
-    return null;
+    (async function fetchData() {
+      const data = await getAdmin();
+      setData(data);
+      setLoading(false);
+    })();
+  }, [count]);
+  // const data: KeysItem = await getAdmin() ?? { keys: [] ,total: 0};
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      </div>)
+    ;
   }
 
   return (
     <div className="px-6">
-      <div className="mt-3 flex justify-between">
-        <h1 className="text-3xl py-4">Admin DashBoard</h1>
-        {/* <button className="" onClick={() => {}}>
-          退出登录
-        </button> */}
-        <Button
-          onClick={() => {}}
-          disabled={loading}
-          variant="outline"
-          size="sm"
-        >
-          退出登录
-        </Button>
-      </div>
+      <Panel />
       <div className="mt-5">
-        <div className="w-full p-4 flex justify-between border shadow-md">
-          <span>总数量：</span>
-          <input
-            placeholder="输入关键词搜索"
-            className="px-1 border border-gray-300 placeholder:text-gray-300 placeholder:text-xs focus:outline-none focus:border-blue-500 rounded-sm"
-            type="text"
-          />
-        </div>
-        <div></div>
+        {<KeysContent data={data} setCount={setCount} />}
       </div>
     </div>
   );
