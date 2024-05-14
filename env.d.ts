@@ -5,4 +5,5 @@ interface CloudflareEnv {
   // as a dev dependency and you have added it to your
   //`tsconfig.json` file under `compilerOptions.types`.
   KV_TEST: KVNamespace,
+  PASSWD: string,
 }

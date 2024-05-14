@@ -13,6 +13,10 @@ import axios from "axios";
 import KeysItem from "./keys-item";
 import { useRouter } from "next/navigation";
 
+let BASE_URL = "";
+if (process.env.NODE_ENV === "development") {
+  BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
+}
 interface KeysContentProps {
   data: KeysItemType;
   setCount: Dispatch<SetStateAction<number>>;
@@ -33,11 +37,11 @@ const KeysContent: React.FC<KeysContentProps> = ({ data, setCount }) => {
   }, [searchValue, data]);
 
   const deleteKey = async (key: string) => {
-    await axios.delete(`http://localhost:8788/api/v1/admin/${key}`);
+    await axios.delete(`${BASE_URL}/api/v1/admin/${key}`);
     toast.success("删除成功!");
     // setFilterData(data.keys = data.keys.filter((item) => item.name !== key));
     router.refresh();
-    router.push("http://localhost:8788/admin");
+    router.push(`${BASE_URL}}/admin`);
     setCount((prev) => prev + 1);
   };
 

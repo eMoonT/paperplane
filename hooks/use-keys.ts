@@ -4,14 +4,25 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 interface keysStore {
-  data: KeysItemList[];
-  removeItem: (key: string) => void;
+  delKey: string
+  setDelKey: (key: string) => void
+  Keys: KeysItemList[];
+  setKeys: (keys: KeysItemList[]) => void;
 }
 
-const useKeys = create<keysStore>((set, get) => ({
-  data: [],
-  removeItem: (key: string) => {
-    set({data: get().data.filter((item) => item.name !== key)}),
-    toast.success("删除成功")
+export const useStoreKeys = create<keysStore>((set, get) => ({
+  delKey: "",
+  setDelKey: (key: string) => {
+    set(state => {
+      const updateKeys = state.Keys.filter(item => item.name !== key);
+      return {
+        Keys: updateKeys,
+        delKey: key
+      }
+    });
+  },
+  Keys: [],
+  setKeys: (keys: KeysItemList[]) => {
+    set({ Keys: keys });
   },
 }));

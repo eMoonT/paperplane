@@ -10,17 +10,8 @@ import { KVNamespace } from "@cloudflare/workers-types";
 import axios from "axios";
 import toast from "react-hot-toast";
 
+
 let CODE_NUM = 0;
-
-let BASE_URL = ''
-if (process.env.NODE_ENV === "development") {
-  BASE_URL = process.env.NEXT_PUBLIC_BASE_URL as string;
-}
-
-export interface Env {
-  KV_TEST: KVNamespace;
-  BASE_URL: string;
-}
 
 function getRandomNumberBetween(min: number, max: number): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -30,7 +21,7 @@ async function validCode() {
   console.log("code重复, 重新生成code");
   let isDone = false;
   while (!isDone) {
-    const res = await axios.get(`${BASE_URL}/api/v1/${CODE_NUM}`);
+    const res = await axios.get(`/api/v1/${CODE_NUM}`);
     if (res.data.status === 0) {
       CODE_NUM = getRandomNumberBetween(1000, 9999);
     } else if ((res.data.status = 1)) {
@@ -95,7 +86,7 @@ export default function Home() {
     setIsContentModalOpen((prev) => !prev);
   };
 
-  const sendMessage = async (expire: number) => {
+  const send = async (expire: number) => {
     validCode();
     console.log(expire)
 
@@ -107,13 +98,13 @@ export default function Home() {
 
     codeRef.current = CODE_NUM;
 
-    await axios.post(`${BASE_URL}/api/v1/${CODE_NUM}`, data);
+    await axios.post(`/api/v1/${CODE_NUM}`, data);
     toggleModal();
     toggleLinkModal();
   };
 
   const receive = async () => {
-    const res = await axios.get(`${BASE_URL}/api/v1/${codeInput}`);
+    const res = await axios.get(`/api/v1/${codeInput}`);
 
     if (res.data.status === 0) {
       setClipboardData(res.data.value);
@@ -160,7 +151,7 @@ export default function Home() {
         <BoardModal
           clipboardData={clipboardData}
           setClipboardData={setClipboardData}
-          sendMessage={sendMessage}
+          send={send}
           isOpen={isModalOpen}
           onClose={toggleModal}
         />

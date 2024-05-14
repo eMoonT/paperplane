@@ -6,6 +6,7 @@
 // }
 export interface KeysItemList {
   name: string,
+  expiration?: string,
   metadata: {
     expireTime: string,
     content: string

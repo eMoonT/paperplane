@@ -7,5 +7,7 @@ pages_build_output_dir = ".vercel/output/static"
 
 [[kv_namespaces]]
 binding = "KV_TEST"
-id = "cccf0bba83a64d1c9ed149ed475bc1fa"
+id = ""
 
+[vars]
+PASSWD = '123'

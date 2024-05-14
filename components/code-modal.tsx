@@ -38,6 +38,15 @@ const CodeModal: React.FC<CodeModalProps> = ({
           onChange={(e) => {
             setCodeInput(Number(e.target.value));
           }}
+          onKeyDown={(e) => {
+            if (e.key === 'Escape') {
+              console.log("Escape")
+              onClose();
+            }
+            if (e.key === "Enter") {
+              receive();
+            } 
+          }}
           value={codeInput === 0 ? "" : codeInput}
           className="h-[80px] xs:w-[280px] w-[180px] text-5xl text-center outline-none border-b-2 bg-white dark:bg-[rgba(30,30,30,1.5)] focus:border-blue-500 text-blue-600 font-bold"
         />
