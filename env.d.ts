@@ -6,4 +6,5 @@ interface CloudflareEnv {
   //`tsconfig.json` file under `compilerOptions.types`.
   KV_TEST: KVNamespace,
   PASSWD: string,
+  JWT_SECRET_KEY: string,
 }

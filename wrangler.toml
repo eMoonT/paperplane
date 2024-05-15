@@ -10,4 +10,4 @@ binding = "KV_TEST"
 id = ""
 
 [vars]
-PASSWD = '123'
+PASSWD = ''

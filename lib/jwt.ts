@@ -1,27 +1,36 @@
-import jwt from 'jsonwebtoken';
+import { jwtVerify, KeyLike } from "jose";
 
-const secretKey = 'cccf0bba83a64d1c9ed149ed475bc1fa'; // 保密且复杂的密钥
-
-// 生成 JWT
-export function generateToken(data: object): string {
-    const token = jwt.sign(data, secretKey, { expiresIn: '1h' }); // 令牌有效期1小时
-    return token;
+/**
+ * Retrieves the JWT secret key from the environment variable and encodes it as a `Uint8Array`.
+ * This encoding is necessary for the `jose` library to use the key in its functions.
+ *
+ * @returns {Uint8Array} The encoded JWT secret key.
+ * @throws {Error} If the JWT secret key is not found in the environment variables.
+ */
+const secret = 'a6bHBj4PQQdpRa9WCucFyIqHFmDyK1Sl'
+export function getJwtSecretKey(): Uint8Array {
+//   const secret = secret_key
+  if (!secret) {
+    throw new Error(
+      "JWT secret key is not defined in the environment variables."
+    );
+  }
+  return new TextEncoder().encode(secret);
 }
 
-// 验证 JWT
-export function verifyToken(token: string): jwt.JwtPayload | string {
-    try {
-        const decoded = jwt.verify(token, secretKey);
-        return decoded;
-    } catch (error) {
-        return 'Token is invalid or has expired';
-    }
+/**
+ * Verifies a JWT token using the secret key.
+ *
+ * @param {string | Uint8Array} token - The JWT token to verify.
+ * @returns {Promise<object | null>} The payload of the verified JWT token, or `null` if verification fails.
+ */
+export async function verifyJwtToken(token: string): Promise<object | null> {
+  try {
+    const secretKey = getJwtSecretKey();
+    const { payload } = await jwtVerify(token, secretKey as unknown as KeyLike);
+    return payload;
+  } catch (error) {
+    console.error("Failed to verify JWT token:", error);
+    return null;
+  }
 }
-
-// 示例使用
-const myData = { id: 1, name: 'John Doe' };
-const token = generateToken(myData);
-console.log(`Generated Token: ${token}`);
-
-const verificationResult = verifyToken(token);
-console.log(`Verification Result: `, verificationResult);

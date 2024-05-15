@@ -1,8 +1,17 @@
 import { NextResponse, NextRequest } from "next/server";
 import { getRequestContext } from "@cloudflare/next-on-pages";
+import { cookies } from "next/headers";
+import isAuth from "@/lib/is-auth";
 
 export const runtime = "edge";
-export async function GET() {
+export async function GET(request: Request) {
+
+  const token = request.headers.get("Authorization")
+  const login_status = await isAuth()
+  if (login_status === false && token === null || token === '') {
+    return NextResponse.json({ message: "未授权" }, { status: 301 });
+  }
+
   const MY_KV = getRequestContext().env.KV_TEST;
 
   const data = await MY_KV.list();

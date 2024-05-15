@@ -185,7 +185,7 @@ export default function Home() {
             PaperPlane{"  "} •
           </a>
           {"  "}
-          Engine by <a href="https://cloudflare.com">Cloudflare Pages</a>
+          Power by <a href="https://cloudflare.com">Cloudflare Pages</a>
         </span>
       </div>
     </>
