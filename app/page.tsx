@@ -6,32 +6,12 @@ import BoardModal from "@/components/board-modal";
 import CodeModal from "@/components/code-modal";
 import LinkModal from "@/components/link-modal";
 import ContentModal from "@/components/content-modal";
-import { KVNamespace } from "@cloudflare/workers-types";
 import axios from "axios";
 import toast from "react-hot-toast";
+import { generateCode } from "@/actions/get-code";
 
-
-let CODE_NUM = 0;
-
-function getRandomNumberBetween(min: number, max: number): number {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-async function validCode() {
-  console.log("code重复, 重新生成code");
-  let isDone = false;
-  while (!isDone) {
-    const res = await axios.get(`/api/v1/${CODE_NUM}`);
-    if (res.data.status === 0) {
-      CODE_NUM = getRandomNumberBetween(1000, 9999);
-    } else if ((res.data.status = 1)) {
-      isDone = true;
-    }
-  }
-}
 
 export default function Home() {
-  CODE_NUM = getRandomNumberBetween(1000, 9999);
   // const { KV_TEST } = process.env as unknown as { KV_TEST: KVNamespace}
 
   const [clipboardData, setClipboardData] = useState<string>("");
@@ -42,6 +22,7 @@ export default function Home() {
 
   const dataContentRef = useRef(null);
   const codeRef = useRef<number>(0);
+
 
   useEffect(() => {
     if (!isWatching) {
@@ -87,18 +68,22 @@ export default function Home() {
   };
 
   const send = async (expire: number) => {
-    validCode();
-    console.log(expire)
-
+    const code = await generateCode();
     const data = {
-      code: CODE_NUM,
+      code,
       text: clipboardData,
-      expire
+      expire,
+      type: 0
     };
 
-    codeRef.current = CODE_NUM;
+    codeRef.current = code;
 
-    await axios.post(`/api/v1/${CODE_NUM}`, data);
+    if (clipboardData.length === 0) {
+      toast.error("发送内容不能为空！");
+      return;
+    }
+
+    await axios.post(`/api/v1/${code}`, data);
     toggleModal();
     toggleLinkModal();
   };
@@ -112,8 +97,9 @@ export default function Home() {
       toggleContentModal();
       dataContentRef.current = res.data;
     }
+
     if (res.data.status === 1) {
-      toast.error("提取码不存在");
+      toast.error("提取码不存在!");
     }
   };
 

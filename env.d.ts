@@ -7,4 +7,9 @@ interface CloudflareEnv {
   KV_TEST: KVNamespace,
   PASSWD: string,
   JWT_SECRET_KEY: string,
+  R2_ACCOUNT_ID: string,
+  R2_ACCESS_KEY_ID: string,
+  R2_SECRET_KEY_ID: string,
+  R2_BUCKET_NAME: string,
+  PUBLIC_R2_URL: string,
 }

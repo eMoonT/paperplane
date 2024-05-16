@@ -7,6 +7,7 @@ export type KeysColumn = {
   name: string;
   content: string;
   expireTime: string;
+  type?: number;
 };
 
 export const columns: ColumnDef<KeysColumn>[] = [
@@ -18,16 +19,33 @@ export const columns: ColumnDef<KeysColumn>[] = [
     accessorKey: "content",
     header: "Value",
     cell: ({ row }) =>
-      row.original.content.length > 100
-        ? <pre className="w-[200px] md:w-[400px] lg:w-[600px] xl:w-[800px] overflow-hidden text-ellipsis">{row.original.content/*.substring(0, 100) + "..."*/}</pre>
-        : <pre className="w-[200px] md:w-[400px] lg:w-[600px] xl:w-[800px]">{row.original.content}</pre>,
+      row.original.type === 1 &&
+      ["jpeg", "jpg", "png", "bmp", "gif", "tiff", "svg", "webp"].some((word) =>
+        row.original.content.includes(word)
+      ) ? (
+        <img
+          src={row.original.content}
+          className="w-[200px] md:w-[400px] lg:w-[600px] xl:w-[800px] bg-cover bg-center"
+        />
+      ) : row.original.content.length > 100 ? (
+        <pre className="w-[200px] md:w-[400px] lg:w-[600px] xl:w-[800px] overflow-hidden text-ellipsis">
+          {row.original.content /*.substring(0, 100) + "..."*/}
+        </pre>
+      ) : (
+        <pre className="w-[200px] md:w-[400px] lg:w-[600px] xl:w-[800px]">
+          {row.original.content}
+        </pre>
+      ),
   },
   {
     accessorKey: "expireTime",
     header: "过期时间",
     enableSorting: true,
     sortingFn: (rowA, rowB) => {
-      return Number(new Date(rowA.getValue("expireTime"))) - Number(new Date(rowB.getValue("expireTime")))
+      return (
+        Number(new Date(rowA.getValue("expireTime"))) -
+        Number(new Date(rowB.getValue("expireTime")))
+      );
     },
   },
   {

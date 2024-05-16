@@ -1,5 +1,4 @@
 import { cookies } from "next/headers";
-// import Cookies from "js-cookie";
 import { verifyJwtToken } from "./jwt";
 
 /**
@@ -7,7 +6,7 @@ import { verifyJwtToken } from "./jwt";
  *
  * @returns {Promise<boolean>} A promise that resolves to `true` if the user is authenticated, otherwise `false`.
  */
-export default async function isAuth(): Promise<boolean> {
+export default async function isAuth(secret: string): Promise<boolean> {
   // Attempt to retrieve the auth cookie from the cookie store
   const cookieStore = cookies();
   const authCookie = cookieStore.get("auth");
@@ -20,7 +19,7 @@ export default async function isAuth(): Promise<boolean> {
   }
 
   // Verify the auth cookie's value (JWT token)
-  const verifiedToken = await verifyJwtToken(authCookie.value);
+  const verifiedToken = await verifyJwtToken(authCookie.value,secret);
 
   // If the token is verified, log the event and return true, otherwise log the failure and return false
   if (verifiedToken) {

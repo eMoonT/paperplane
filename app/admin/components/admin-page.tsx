@@ -18,6 +18,7 @@ type newKeysItemList = {
   name: string;
   content: string;
   expireTime: string;
+  type?: number;
 };
 
 const AdminPage = () => {
@@ -33,13 +34,12 @@ const AdminPage = () => {
   const setKeys = useStoreKeys((state) => state.setKeys)
 
   const router = useRouter();
-  
 
   useEffect(() => {
     (async function fetchData() {
       const data = await getAdmin();
       console.log(data)
-      setData(data);
+      // setData(data);
       setKeys(data.keys)
       // setIsLogin(true)
       setLoading(false);
@@ -59,6 +59,7 @@ const AdminPage = () => {
       name: data.name,
       content: data.metadata.content,
       expireTime: data.metadata.expireTime,
+      type: data.metadata.type
     };
   };
 

@@ -6,11 +6,11 @@ pages_build_output_dir = ".vercel/output/static"
 
 
 [[kv_namespaces]]
-binding = "KV_TEST"
+binding = ""
 id = ""
 
 [vars]
-PASSWD = ''
+PASSWD = '' 
 JWT_SECRET_KEY = ''
 R2_ACCOUNT_ID=''
 R2_ACCESS_KEY_ID=''

@@ -25,7 +25,7 @@ const LinkModal: React.FC<LinkModalProps> = ({
       >
         <div className="xs:w-[480px] w-4/5 h-3/6 p-2 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-lg shadow-xl flex flex-col justify-center items-center fixed ">
           <button onClick={onClose} className="text-gray-600 dark:text-gray-300 absolute left-4 top-6">{'< '}返回</button>
-          <CopyToClipboard text={code.toString()} onCopy={handleCopy}>
+          <CopyToClipboard text={String(code)} onCopy={handleCopy}>
             <h1 className="text-6xl text-gray-700 dark:text-gray-100 cursor-pointer">{code}</h1>
           </CopyToClipboard>
           <p className="m-3 text-gray-400">发送成功，点击保存提取码</p>

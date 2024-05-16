@@ -7,8 +7,7 @@ import { jwtVerify, KeyLike } from "jose";
  * @returns {Uint8Array} The encoded JWT secret key.
  * @throws {Error} If the JWT secret key is not found in the environment variables.
  */
-const secret = 'a6bHBj4PQQdpRa9WCucFyIqHFmDyK1Sl'
-export function getJwtSecretKey(): Uint8Array {
+export function getJwtSecretKey(secret: string): Uint8Array {
 //   const secret = secret_key
   if (!secret) {
     throw new Error(
@@ -24,9 +23,9 @@ export function getJwtSecretKey(): Uint8Array {
  * @param {string | Uint8Array} token - The JWT token to verify.
  * @returns {Promise<object | null>} The payload of the verified JWT token, or `null` if verification fails.
  */
-export async function verifyJwtToken(token: string): Promise<object | null> {
+export async function verifyJwtToken(token: string,secret: string): Promise<object | null> {
   try {
-    const secretKey = getJwtSecretKey();
+    const secretKey = getJwtSecretKey(secret);
     const { payload } = await jwtVerify(token, secretKey as unknown as KeyLike);
     return payload;
   } catch (error) {

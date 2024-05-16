@@ -9,7 +9,8 @@ export interface KeysItemList {
   expiration?: string,
   metadata: {
     expireTime: string,
-    content: string
+    content: string,
+    type?: number
   }
 }
 

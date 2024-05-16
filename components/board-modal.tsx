@@ -1,5 +1,8 @@
 import React, { useRef, useEffect, useState } from "react";
-import { X } from "lucide-react";
+import { X, ArrowLeft, Upload } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { UploadFile } from "./upload-file";
+
 
 interface BoardModalProps {
   isOpen: boolean;
@@ -19,6 +22,8 @@ const BoardModal: React.FC<BoardModalProps> = ({
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const [expire, setExpire] = useState<number>(7);
 
+  const [isUpload, setIsUpload] = useState<boolean>(false);
+
   useEffect(() => {
     textareaRef.current?.focus();
   }, [isOpen]);
@@ -34,15 +39,25 @@ const BoardModal: React.FC<BoardModalProps> = ({
           isOpen ? "bg-gray-900 bg-opacity-75" : "hidden"
         }`}
       >
-        <div className="xs:w-[480px] w-4/5 h-2/5 py-2 px-4 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-xl shadow-xl flex flex-col justify-center items-center fixed">
+        <div className="xs:w-[480px] w-4/5 h-auto py-2 px-4 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-xl shadow-xl flex flex-col justify-center items-center fixed">
           {/* 模态框内容 */}
           <X
             size={24}
             onClick={onClose}
             className="absolute right-5 top-4 text-gray-600 dark:text-gray-300 cursor-pointer"
           />
+          <ArrowLeft
+            size={24}
+            onClick={() => setIsUpload(!isUpload)}
+            className={cn(
+              "absolute left-5 top-4 text-gray-600 dark:text-gray-300 cursor-pointer",
+              isUpload ? "" : "hidden"
+            )}
+          />
 
-          <h1 className="text-gray-700 dark:text-white py-2">发送文本</h1>
+          <h1 className="text-gray-700 dark:text-white py-2">
+            {isUpload ? "上传文件" : "发送文本"}
+          </h1>
           <textarea
             name="t1"
             id="t1"
@@ -57,9 +72,20 @@ const BoardModal: React.FC<BoardModalProps> = ({
             }}
             placeholder="请输入内容"
             value={clipboardData}
-            className="h-[280px] w-full p-2 outline-none resize-none placeholder:text-sm bg-[rgba(0,0,0,0.05)] focus:bg-white  dark:bg-[rgba(255,255,255,0.05)] focus:border focus:border-blue-400 translate-x-1 dark:text-gray-100 rounded-lg"
+            className={cn(
+              "h-[220px] w-full p-2 outline-none resize-none placeholder:text-sm bg-[rgba(0,0,0,0.05)] focus:bg-white  dark:bg-[rgba(255,255,255,0.05)] focus:border focus:border-blue-400 translate-x-1 dark:text-gray-100 rounded-lg",
+              isUpload ? "hidden" : ""
+            )}
           ></textarea>
-          <div className="w-full py-3 flex justify-between">
+          <div className="p-2 h-full">
+            <UploadFile isUpload={isUpload} />
+          </div>
+          <div
+            className={cn(
+              "w-full py-3 flex justify-between",
+              isUpload ? "hidden" : ""
+            )}
+          >
             <span className="dark:text-gray-100 text-sm">
               过期时间(天)：
               <input
@@ -69,15 +95,22 @@ const BoardModal: React.FC<BoardModalProps> = ({
                 onChange={(e) => setExpire(Number(e.target.value))}
               />
             </span>
-            <button
-              onClick={() => {
-                send(expire);
-                setExpire(7);
-              }}
-              className="relative inline-flex items-center justify-center w-[60px] xs:w-[90px] h-10 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
-              发送
-            </button>
+            <div className="flex justify-center items-center gap-4">
+              <Upload
+                onClick={() => setIsUpload(!isUpload)}
+                size={40}
+                className="text-blue-500 hover:bg-gray-300 dark:hover:bg-[rgba(255,255,255,0.05)] p-2 hover:rounded-md"
+              />
+              <button
+                onClick={() => {
+                  send(expire);
+                  setExpire(7);
+                }}
+                className="relative inline-flex items-center justify-center w-[60px] xs:w-[90px] h-10 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+              >
+                发送
+              </button>
+            </div>
           </div>
         </div>
       </div>

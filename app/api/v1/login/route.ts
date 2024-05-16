@@ -8,7 +8,7 @@ export const runtime = "edge";
 export async function POST(request: Request) {
   try {
     const passwd = getRequestContext().env.PASSWD;
-    // const secret_key = getRequestContext().env.JWT_SECRET_KEY;
+    const secret_key = getRequestContext().env.JWT_SECRET_KEY;
 
     const body: any = await request.json();
     const { input }: { input: string } = body;
@@ -20,12 +20,13 @@ export async function POST(request: Request) {
       })
         .setProtectedHeader({ alg: "HS256" })
         .setIssuedAt()
-        .sign(getJwtSecretKey());
+        .sign(getJwtSecretKey(secret_key));
 
       cookies().set({
         name: "auth",
         value: token,
         secure: true,
+        expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 7),
       });
 
       // Redirect the user to the home page
@@ -41,11 +42,6 @@ export async function POST(request: Request) {
       });
     }
 
-    // const res =
-    //   String(input) === String(passwd)
-    //     ? { message: "Success" }
-    //     : { message: "Fail" };
-    // return NextResponse.json(res);
   } catch (error) {
     return NextResponse.json(
       {

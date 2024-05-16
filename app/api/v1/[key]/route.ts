@@ -41,7 +41,7 @@ export async function POST(
 ) {
   try {
     const body: any = await request.json();
-    const { code, text, expire } = body;
+    const { code, text, expire, type } = body;
     const MY_KV = getRequestContext().env.KV_TEST;
 
     const now = dayjs();
@@ -52,13 +52,14 @@ export async function POST(
 
     await MY_KV.put(code, text, {
       expirationTtl: secendTime,
-      metadata: { expireTime: formattedTime, content: text },
+      metadata: { expireTime: formattedTime, content: text, type },
     });
     return NextResponse.json({
       key: code,
       value: text,
       status: 0,
       expireTime: formattedTime,
+      type
     });
   } catch (error) {
     return new NextResponse(`Internet error: ${error}`, { status: 400 });

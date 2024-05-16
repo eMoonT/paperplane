@@ -7,8 +7,11 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: { key: string } }
 ) {
+
+  const secret_key = getRequestContext().env.JWT_SECRET_KEY;
   const token = request.headers.get("Authorization")
-  const login_status = await isAuth()
+  const login_status = await isAuth(secret_key)
+
   if (login_status === false && token === null || token === '') {
     return NextResponse.json({ message: "未授权" }, { status: 301 });
   }
