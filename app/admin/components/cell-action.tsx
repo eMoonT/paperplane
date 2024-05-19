@@ -9,12 +9,13 @@ import { KeysColumn } from "./columns";
 import { Button } from "@/components/ui/button";
 import { Copy, MoreHorizontal, Trash, Download } from "lucide-react";
 import toast from "react-hot-toast";
-import { useParams, useRouter } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
-import axios from "axios";
 import { AlterModal } from "@/components/alter-modal";
 
-import { useStoreKeys } from "@/hooks/use-keys";
+import { deleteKey } from "@/actions/multiple-delete";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { newKeysItemList } from "@/types";
 
 interface CellActionProps {
   data: KeysColumn;
@@ -22,27 +23,57 @@ interface CellActionProps {
 
 const CellAction: React.FC<CellActionProps> = ({ data }) => {
   const router = useRouter();
-  const storeKey = useStoreKeys();
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
 
-  const onDelete = async () => {
-    try {
-      setLoading(true);
-      setOpen(true);
-      await axios.delete(`/api/v1/admin/${data.name}`);
+  // const setDelKey = useStoreKeys((state)=> state.setDelKey);
+
+  const queryClient = useQueryClient();
+
+  const { mutate } = useMutation({
+    mutationFn: (name: string) => deleteKey(name),
+    onSuccess: () => {
       toast.success("删除成功!");
-      storeKey.setDelKey(data.name);
+      setOpen(false);
+      // setDelKey(data.name);
       router.refresh();
       router.push(`/admin`);
-    } catch (error) {
-      toast.error("删除失败!");
-    } finally {
-      setLoading(false);
-      setOpen(false);
-    }
-  };
+    },
+    onMutate: async (name: string) => {
+      await queryClient.cancelQueries({ queryKey: ["keys"] });
+      const prevData = await queryClient.getQueryData(["keys"]);
+      queryClient.setQueryData(["keys"], (oldData: newKeysItemList[]) => {
+        return oldData.filter((item: newKeysItemList) => item.name !== name);
+      });
+      return { prevData };
+    },
+    onError: (error, variables, context) => {
+      console.error("mutate: ", error);
+      queryClient.setQueryData(["keys"], context?.prevData);
+    },
+    // onSettled: () => {
+    //   queryClient.invalidateQueries({ queryKey: ["keys"] })
+    // }
+  });
+
+  // const onDelete = async () => {
+  //   try {
+  //     setLoading(true);
+  //     setOpen(true);
+  //     await deleteKey(data.name)
+  //     toast.success("删除成功!");
+  //     setDelKey(data.name);
+  //     router.refresh();
+  //     router.push(`/admin`);
+  //   } catch (error) {
+  //     toast.error("删除失败!");
+  //   } finally {
+  //     setLoading(false);
+  //     setOpen(false);
+  //   }
+  // };
+
   const onCopy = (id: string) => {
     navigator.clipboard.writeText(id);
     toast.success("复制成功!");
@@ -70,7 +101,7 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
         loading={loading}
         isOpen={open}
         onClose={() => setOpen(false)}
-        onConfirm={onDelete}
+        onConfirm={() => mutate(data.name)}
       />
       <DropdownMenu>
         <DropdownMenuTrigger asChild>

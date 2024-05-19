@@ -12,7 +12,6 @@ import { generateCode } from "@/actions/get-code";
 
 
 export default function Home() {
-  // const { KV_TEST } = process.env as unknown as { KV_TEST: KVNamespace}
 
   const [clipboardData, setClipboardData] = useState<string>("");
   const [codeInput, setCodeInput] = useState<number>(0);
@@ -23,7 +22,6 @@ export default function Home() {
   const dataContentRef = useRef(null);
   const codeRef = useRef<number>(0);
 
-
   useEffect(() => {
     if (!isWatching) {
       const handlePaste = (event: ClipboardEvent) => {
@@ -33,7 +31,6 @@ export default function Home() {
         setIsModalOpen(true);
         setIsWatching(true);
       };
-
       window.addEventListener("paste", handlePaste);
 
       return () => {

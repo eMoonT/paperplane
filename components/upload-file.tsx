@@ -1,4 +1,4 @@
-import { Trash2, Send, CurlyBraces } from "lucide-react";
+import { Trash2, Send } from "lucide-react";
 import type { UploadProps, UploadFile as UploadFileType } from "antd";
 import { Upload } from "antd";
 import { generateCode } from "@/actions/get-code";
@@ -11,7 +11,7 @@ let code: number;
 
 type newUploadFileType = UploadFileType & {
   isDownload?: boolean;
-}
+};
 
 interface UploadFileProps {
   isUpload: boolean;
@@ -39,9 +39,19 @@ export const UploadFile: React.FC<UploadFileProps> = ({ isUpload }) => {
     },
     showUploadList: {
       showDownloadIcon: true,
-      downloadIcon: <Send size={16} className="mt-2 hover:text-orange-400" />,
+      downloadIcon: (
+        <Send
+          size={16}
+          className="mt-2 dark: text-gray-500 hover:text-orange-400"
+        />
+      ),
       showRemoveIcon: true,
-      removeIcon: <Trash2 size={16} className="mt-2 hover:text-red-800" />,
+      removeIcon: (
+        <Trash2
+          size={16}
+          className="mt-2 dark: text-gray-500 hover:text-red-800"
+        />
+      ),
     },
     async onDownload(file: newUploadFileType) {
       code = await generateCode();
@@ -75,7 +85,7 @@ export const UploadFile: React.FC<UploadFileProps> = ({ isUpload }) => {
         fileList={fileList}
         className={isUpload ? "" : "hidden"}
       >
-        <p className="dark:text-gray-100 h-[200px] w-[280px] xs:h-[200px] xs:w-[420px] flex items-center justify-center">
+        <p className="dark:text-gray-100 h-[200px] w-[200px] xs:h-[200px] xs:w-[420px] flex items-center justify-center">
           点击或拖动文件至此处上传
         </p>
       </Dragger>

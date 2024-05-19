@@ -1,14 +1,13 @@
-import { KeysItemList } from "@/types";
-import toast from "react-hot-toast";
+import { newKeysItemList } from "@/types";
 import { create } from "zustand";
-import { persist, createJSONStorage } from "zustand/middleware";
 
 interface keysStore {
   delKey: string;
   setDelKey: (key: string) => void;
-  Keys: KeysItemList[];
-  setKeys: (keys: KeysItemList[]) => void;
-  addKey: (key: KeysItemList) => void;
+  Keys: newKeysItemList[];
+  setKeys: (keys: newKeysItemList[]) => void;
+  addKey: (key: newKeysItemList) => void;
+  multipleDelete: (keys: string[]) => void;
 }
 
 export const useStoreKeys = create<keysStore>((set, get) => ({
@@ -23,15 +22,25 @@ export const useStoreKeys = create<keysStore>((set, get) => ({
     });
   },
   Keys: [],
-  setKeys: (keys: KeysItemList[]) => {
+  setKeys: (keys: newKeysItemList[]) => {
     set({ Keys: keys });
   },
-  addKey: (key: KeysItemList) => {
+  addKey: (key: newKeysItemList) => {
     set((state) => {
       const updateKeys = [...state.Keys, key];
       return {
         Keys: updateKeys,
       };
+    });
+  },
+  multipleDelete: (ids: string[]) => {
+    ids.map((id) => {
+      set((state) => {
+        const updateKeys = state.Keys.filter((key) => key.id !== Number(id));
+        return {
+          Keys: updateKeys,
+        };
+      });
     });
   },
 }));

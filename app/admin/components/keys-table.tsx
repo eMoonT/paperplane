@@ -1,9 +1,10 @@
 import { DataTable } from "@/components/data-table"
 import { KeysColumn,columns } from "./columns"
+import { newKeysItemList } from "@/types"
 
 
 interface KeysTableProps {
-  data: KeysColumn[]
+  data: newKeysItemList[]
 }
 
 const KeysTable:React.FC<KeysTableProps> = ({data}) => {

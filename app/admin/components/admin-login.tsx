@@ -32,7 +32,7 @@ const AdminLogin = () => {
     <>
       <LoginModal
         isOpen={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {setOpen(false);router.push('/')}}
         onConfirm={validPasswd}
         loading={false}
       />

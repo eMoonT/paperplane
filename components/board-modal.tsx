@@ -73,7 +73,7 @@ const BoardModal: React.FC<BoardModalProps> = ({
             placeholder="请输入内容"
             value={clipboardData}
             className={cn(
-              "h-[220px] w-full p-2 outline-none resize-none placeholder:text-sm bg-[rgba(0,0,0,0.05)] focus:bg-white  dark:bg-[rgba(255,255,255,0.05)] focus:border focus:border-blue-400 translate-x-1 dark:text-gray-100 rounded-lg",
+              "h-[220px] w-full p-2 border-none outline-none resize-none placeholder:text-sm bg-[rgba(0,0,0,0.05)] focus:bg-white  dark:bg-[rgba(255,255,255,0.05)] focus:border focus:border-blue-400 translate-x-1 dark:text-gray-100 rounded-md",
               isUpload ? "hidden" : ""
             )}
           ></textarea>
@@ -82,15 +82,15 @@ const BoardModal: React.FC<BoardModalProps> = ({
           </div>
           <div
             className={cn(
-              "w-full py-3 flex justify-between",
+              "w-full space-x-1 xs:py-3 flex justify-between",
               isUpload ? "hidden" : ""
             )}
           >
-            <span className="dark:text-gray-100 text-sm">
+            <span className="dark:text-gray-100 text-xs xs:text-sm">
               过期时间(天)：
               <input
                 type="number"
-                className="h-10 w-[55px] p-2 text-md bg-[rgba(0,0,0,0.05)] dark:bg-[rgba(255,255,255,0.05)] dark:text-gray-100 rounded-sm outline-none border-b-2 border-b-blue-400"
+                className="h-10 w-[30px] xs:w-[55px] p-2 text-md bg-[rgba(0,0,0,0.05)] dark:bg-[rgba(255,255,255,0.05)] dark:text-gray-100 rounded-sm outline-none border-b-2 border-b-blue-400"
                 value={expire === 0 ? "" : expire}
                 onChange={(e) => setExpire(Number(e.target.value))}
               />
@@ -106,7 +106,7 @@ const BoardModal: React.FC<BoardModalProps> = ({
                   send(expire);
                   setExpire(7);
                 }}
-                className="relative inline-flex items-center justify-center w-[60px] xs:w-[90px] h-10 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="relative inline-flex items-center justify-center w-[50px] xs:w-[90px] h-10 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 发送
               </button>

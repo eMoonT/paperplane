@@ -60,7 +60,7 @@ export async function POST(req: Request, res: NextResponse) {
         PUBLIC_R2_URL
       );
 
-    fetch(preSignedUrl, {
+    const res = await fetch(preSignedUrl, {
       method: "PUT",
       body: buffer,
     });

@@ -26,11 +26,8 @@ const CodeModal: React.FC<CodeModalProps> = ({
         isOpen ? "bg-gray-900 bg-opacity-75" : "hidden"
       }`}
     >
-      <div className="xs:w-[480px] w-4/5 h-2/5 px-4 py-2 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-lg shadow-xl flex flex-col justify-center items-center gap-y-8 fixed">
+      <div className="xs:w-[480px] w-4/5 h-2/6 xs:h-2/5 px-2 py-4 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-lg shadow-xl flex flex-col justify-center items-center gap-y-8 fixed">
         <X size={24} onClick={onClose} className="absolute right-5 top-4 text-gray-600 dark:text-gray-300 cursor-pointer"/>
-        {/* <button onClick={onClose} className="absolute right-5 top-6 text-gray-600 dark:text-gray-300">
-          关闭
-        </button> */}
         <h1 className="text-gray-700 dark:text-gray-300 text-lg font-bold">请输入取件码</h1>
         <input
           type="number"
@@ -48,7 +45,7 @@ const CodeModal: React.FC<CodeModalProps> = ({
             } 
           }}
           value={codeInput === 0 ? "" : codeInput}
-          className="h-[80px] xs:w-[280px] w-[180px] text-5xl text-center outline-none border-b-2 bg-white dark:bg-[rgba(30,30,30,1.5)] focus:border-blue-500 text-blue-600 font-bold"
+          className="h-[100px] xs:w-[280px] w-[180px] text-5xl text-center outline-none border-b-2 bg-white dark:bg-[rgba(30,30,30,1.5)] focus:border-blue-500 text-blue-600 font-bold"
         />
         <button
           onClick={receive}

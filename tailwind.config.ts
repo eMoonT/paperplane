@@ -27,6 +27,7 @@ const config = {
     },
     extend: {
       colors: {
+        'custom-link-blue': 'rgb(60, 104, 226)!important',
         border: "hsl(var(--border))",
         input: "hsl(var(--input))",
         ring: "hsl(var(--ring))",

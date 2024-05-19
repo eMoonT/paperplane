@@ -78,4 +78,21 @@
     -webkit-appearance: none;
     margin: 0;
   }
+  .ant-upload-wrapper > a {
+    color: #3c68e2!important;
+  }
+  .ant-upload-icon {
+    color: white!important;
+  }
+  .ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
+    overflow: hidden!important;
+    white-space: nowrap!important;
+    text-overflow: ellipsis!important;
+    padding: 0 8px!important;
+    line-height: 1.5714285714285714!important;
+    flex: auto!important;
+    transition: all 0.3s!important;
+    color: white!important;
+    margin-top: 10px!important;
+  }
 }

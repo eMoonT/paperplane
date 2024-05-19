@@ -1,19 +1,58 @@
-"use client";
-
-import { ColumnDef } from "@tanstack/react-table";
+import { ColumnDef, FilterFn } from "@tanstack/react-table";
 import CellAction from "./cell-action";
+import { Checkbox } from "antd";
+
+// import {
+//   RankingInfo,
+// } from '@tanstack/match-sorter-utils'
+
+// declare module '@tanstack/react-table' {
+//   //add fuzzy filter to the filterFns
+//   interface FilterFns {
+//     fuzzy: FilterFn<unknown>
+//   }
+//   interface FilterMeta {
+//     itemRank: RankingInfo
+//   }
+// }
 
 export type KeysColumn = {
   name: string;
   content: string;
   expireTime: string;
   type?: number;
+  id?: number;
 };
 
 export const columns: ColumnDef<KeysColumn>[] = [
   {
+    id: "select",
+    header: ({ table }) => (
+      <Checkbox
+        {...{
+          checked: table.getIsAllRowsSelected(),
+          indeterminate: table.getIsSomeRowsSelected(),
+          onChange: table.getToggleAllRowsSelectedHandler(),
+        }}
+      />
+    ),
+    cell: ({ row }) => (
+      <div className="px-1">
+        <Checkbox
+          {...{
+            checked: row.getIsSelected(),
+            disabled: !row.getCanSelect(),
+            indeterminate: row.getIsSomeSelected(),
+            onChange: row.getToggleSelectedHandler(),
+          }}
+        />
+      </div>
+    ),
+  },
+  {
     accessorKey: "name",
     header: "Key",
+    // filterFn: 'includesString',
   },
   {
     accessorKey: "content",
@@ -25,7 +64,7 @@ export const columns: ColumnDef<KeysColumn>[] = [
       ) ? (
         <img
           src={row.original.content}
-          className="w-[200px] md:w-[400px] lg:w-[600px] xl:w-[800px] bg-cover bg-center"
+          className="w-[200px] md:w-[400px] bg-cover bg-center"
         />
       ) : row.original.content.length > 100 ? (
         <pre className="w-[200px] md:w-[400px] lg:w-[600px] xl:w-[800px] overflow-hidden text-ellipsis">
@@ -36,6 +75,7 @@ export const columns: ColumnDef<KeysColumn>[] = [
           {row.original.content}
         </pre>
       ),
+      // filterFn: 'includesString',
   },
   {
     accessorKey: "expireTime",
@@ -47,6 +87,7 @@ export const columns: ColumnDef<KeysColumn>[] = [
         Number(new Date(rowB.getValue("expireTime")))
       );
     },
+    // filterFn: 'includesString',
   },
   {
     id: "actions",

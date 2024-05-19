@@ -18,3 +18,11 @@ export interface KeysItem {
   keys: KeysItemList[],
   total: number
 }
+
+export type newKeysItemList = {
+  name: string;
+  content: string;
+  expireTime: string;
+  type?: number;
+  id?: number;
+};

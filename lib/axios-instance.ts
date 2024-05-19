@@ -1,6 +1,7 @@
 import axios from 'axios';
 import Cookies from 'js-cookie';
-import Router from 'next/router';
+import { useRouter } from 'next/navigation';
+// import Router from 'next/router';
 
 const axiosInstance = axios.create({
   baseURL: '/api/v1', // 根据实际情况调整
@@ -24,9 +25,11 @@ axiosInstance.interceptors.request.use(config => {
 axiosInstance.interceptors.response.use(response => {
   return response;
 }, error => {
+  const router = useRouter()
   // 如果返回的状态码为401，即没有权限，则跳转到登录页面
   if (error.response && error.response.status === 401) {
-    Router.push('/login');
+    // Router.push('/login');
+    router.push('/login')
   }
   return Promise.reject(error);
 });

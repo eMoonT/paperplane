@@ -7,12 +7,12 @@ export const runtime = "edge";
 
 type metadataProps = {
   expire: string;
+  type: number;
 };
 export async function GET(
   request: Request,
-  { params }: { params: { key: string } }
+  { params }: { params: { key: string } },
 ) {
-
   try {
     const MY_KV = getRequestContext().env.KV_TEST;
     // await MY_KV.put(`kvTest`, `${Math.random()}`)
@@ -28,6 +28,7 @@ export async function GET(
       value: kvValue,
       status: 0,
       expireTime: (metadata as metadataProps).expire,
+      type: (metadata as metadataProps).type,
     };
     return NextResponse.json(data);
   } catch (error) {
@@ -37,7 +38,7 @@ export async function GET(
 
 export async function POST(
   request: Request,
-  { params }: { params: { data: string[] } }
+  { params }: { params: { data: string[] } },
 ) {
   try {
     const body: any = await request.json();
@@ -59,7 +60,7 @@ export async function POST(
       value: text,
       status: 0,
       expireTime: formattedTime,
-      type
+      type,
     });
   } catch (error) {
     return new NextResponse(`Internet error: ${error}`, { status: 400 });
