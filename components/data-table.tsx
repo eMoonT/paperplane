@@ -24,7 +24,7 @@ import {
 import { Button } from "./ui/button";
 import { Input } from "./ui/input";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { MultipleDelete } from "@/actions/multiple-delete";
 import { useRouter } from "next/navigation";
 import { AlterModal } from "./alter-modal";
@@ -63,6 +63,11 @@ export function DataTable<TData, TValue>({
 
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
+  const [disabled, setDisabled] = useState(true);
+
+  useEffect(()=>{
+    Object.keys(rowSelection).length > 0 ? setDisabled(false) : setDisabled(true);
+  },[rowSelection])
 
   const router = useRouter();
   // const storeMultipleDelete = useStoreKeys((state) => state.multipleDelete);
@@ -108,19 +113,21 @@ export function DataTable<TData, TValue>({
     onMutate: async (ids: string[]) => {
       await queryClient.cancelQueries({ queryKey: ["keys"] });
       const prevData = await queryClient.getQueryData(["keys"]);
-      console.log(prevData)
+      console.log(prevData);
       ids.forEach((id) => {
-        console.log(id)
+        console.log(id);
         queryClient.setQueryData(["keys"], (oldData: newKeysItemList[]) => {
-          return oldData.filter((item: newKeysItemList) => item.id !== Number(id));
+          return oldData.filter(
+            (item: newKeysItemList) => item.id !== Number(id)
+          );
         });
       });
       return { prevData };
     },
     onError: (error, variables, context) => {
-      console.error("mutate: ", error)
+      console.error("mutate: ", error);
       queryClient.setQueryData(["keys"], context?.prevData);
-    }
+    },
   });
 
   // const handlerAlldel = () => {
@@ -139,7 +146,7 @@ export function DataTable<TData, TValue>({
         loading={loading}
         isOpen={open}
         onClose={() => setOpen(false)}
-        onConfirm={()=>mutate(Object.keys(rowSelection))}
+        onConfirm={() => mutate(Object.keys(rowSelection))}
       />
       <div className="w-full flex justify-between border shadow-sm rounded-md items-center p-4 mb-2">
         {/* <span className="text-sm xs:text-md">总数量：{data.length}</span> */}
@@ -216,12 +223,15 @@ export function DataTable<TData, TValue>({
       </div>
       <div className="flex items-center justify-between space-x-2 py-4">
         <div>
-          {Object.keys(rowSelection).length}/
-          {table.getPreFilteredRowModel().rows.length} 行被选择
+          <span className="text-xs xs:text-sm">
+            {Object.keys(rowSelection).length}/
+            {table.getPreFilteredRowModel().rows.length} 行被选择
+          </span>
           <Button
             variant="destructive"
             size="sm"
-            className="ml-5"
+            disabled={disabled}
+            className="ml-2 xs:ml-5 "
             onClick={() => setOpen(true)}
           >
             删除

@@ -27,7 +27,7 @@ const CodeModal: React.FC<CodeModalProps> = ({
       }`}
     >
       <div className="xs:w-[480px] w-4/5 h-2/6 xs:h-2/5 px-2 py-4 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-lg shadow-xl flex flex-col justify-center items-center gap-y-8 fixed">
-        <X size={24} onClick={onClose} className="absolute right-5 top-4 text-gray-600 dark:text-gray-300 cursor-pointer"/>
+        <X size={23} onClick={onClose} className="absolute right-5 top-4 text-gray-600 dark:text-gray-300 cursor-pointer"/>
         <h1 className="text-gray-700 dark:text-gray-300 text-lg font-bold">请输入取件码</h1>
         <input
           type="number"

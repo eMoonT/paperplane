@@ -64,9 +64,9 @@ export const columns: ColumnDef<KeysColumn>[] = [
       ) ? (
         <img
           src={row.original.content}
-          className="w-[200px] md:w-[400px] bg-cover bg-center"
+          className="w-[200px] md:w-[400px] bg-cover bg-center rounded-md"
         />
-      ) : row.original.content.length > 100 ? (
+      ) : row.original.content.length > 25 ? (
         <pre className="w-[200px] md:w-[400px] lg:w-[600px] xl:w-[800px] overflow-hidden text-ellipsis">
           {row.original.content /*.substring(0, 100) + "..."*/}
         </pre>
@@ -75,12 +75,13 @@ export const columns: ColumnDef<KeysColumn>[] = [
           {row.original.content}
         </pre>
       ),
-      // filterFn: 'includesString',
+    // filterFn: 'includesString',
   },
   {
     accessorKey: "expireTime",
     header: "过期时间",
     enableSorting: true,
+    cell: ({ row }) => <div className="min-w-[100px]">{ row.original.expireTime }</div>,
     sortingFn: (rowA, rowB) => {
       return (
         Number(new Date(rowA.getValue("expireTime"))) -

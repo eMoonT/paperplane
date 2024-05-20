@@ -22,7 +22,6 @@ export async function DELETE(
     await MY_KV.delete(params.key);
     return NextResponse.json({ message: "Success" });
   } catch (error) {
-    console.log(error);
-    return new NextResponse(`Internet error`, { status: 500 });
+    return new NextResponse(`Server error`, { status: 500 });
   }
 }

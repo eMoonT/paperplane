@@ -5,18 +5,18 @@
 //   expireTime: string
 // }
 export interface KeysItemList {
-  name: string,
-  expiration?: string,
+  name: string;
+  expiration?: string;
   metadata: {
-    expireTime: string,
-    content: string,
-    type?: number
-  }
+    expireTime: string;
+    content: string;
+    type?: number;
+  };
 }
 
 export interface KeysItem {
-  keys: KeysItemList[],
-  total: number
+  keys: KeysItemList[];
+  total: number;
 }
 
 export type newKeysItemList = {
@@ -25,4 +25,12 @@ export type newKeysItemList = {
   expireTime: string;
   type?: number;
   id?: number;
+};
+
+export type ParamData = {
+  key: string;
+  value: string;
+  status: number;
+  expireTime: string;
+  type: number;
 };

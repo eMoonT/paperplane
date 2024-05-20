@@ -15,8 +15,9 @@ type newUploadFileType = UploadFileType & {
 
 interface UploadFileProps {
   isUpload: boolean;
+  expire: number;
 }
-export const UploadFile: React.FC<UploadFileProps> = ({ isUpload }) => {
+export const UploadFile: React.FC<UploadFileProps> = ({ isUpload, expire }) => {
   const [fileList, setFileList] = useState<newUploadFileType[]>([]);
   // const [isDownload, setIsDownload] = useState<boolean>(true);
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -25,6 +26,7 @@ export const UploadFile: React.FC<UploadFileProps> = ({ isUpload }) => {
     name: "file",
     multiple: true,
     action: "/api/v1/upload",
+    data: {expire: String(expire)},
     onChange(info) {
       let newFileList = [...info.fileList] as newUploadFileType[];
       newFileList = newFileList.slice(-5);
@@ -60,16 +62,11 @@ export const UploadFile: React.FC<UploadFileProps> = ({ isUpload }) => {
       const data = {
         code,
         text: url,
-        expire: 7,
+        expire,
         type: 1,
       };
       await axios.post(`/api/v1/${code}`, data);
 
-      // const newFileList: newUploadFileType[] = fileList.map((item)=>{
-      //   item.uid === file.uid ? item.isDownload = false : null
-      //   return item
-      // })
-      // setFileList(newFileList);
       setIsOpen(!isOpen);
     },
     onDrop() {
@@ -85,7 +82,7 @@ export const UploadFile: React.FC<UploadFileProps> = ({ isUpload }) => {
         fileList={fileList}
         className={isUpload ? "" : "hidden"}
       >
-        <p className="dark:text-gray-100 h-[200px] w-[200px] xs:h-[200px] xs:w-[420px] flex items-center justify-center">
+        <p className="dark:text-gray-100 pl-7 xs:pl-0 h-[200px] w-[200px] xs:h-[200px] xs:w-[420px] flex items-center justify-center">
           点击或拖动文件至此处上传
         </p>
       </Dragger>

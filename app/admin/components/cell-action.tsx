@@ -16,6 +16,7 @@ import { AlterModal } from "@/components/alter-modal";
 import { deleteKey } from "@/actions/multiple-delete";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { newKeysItemList } from "@/types";
+import { downloadFile } from "@/lib/utils";
 
 interface CellActionProps {
   data: KeysColumn;
@@ -79,22 +80,6 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
     toast.success("复制成功!");
   };
 
-  // 创建一个点击事件触发下载
-  const downloadFile = (fileUrl: string) => {
-    try {
-      const fileName = fileUrl.split("/").pop() as string;
-      let a = document.createElement("a");
-      a.href = fileUrl + "?response-content-type=application/octet-stream";
-      a.download = fileName;
-
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } catch (error) {
-      toast.error("下载失败!");
-    }
-  };
-
   return (
     <>
       <AlterModal
@@ -113,7 +98,7 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>操作</DropdownMenuLabel>
           {data.type === 1 && (
-            <DropdownMenuItem onClick={() => downloadFile(data.content)}>
+            <DropdownMenuItem onClick={() => {downloadFile(data.content);toast.success("下载成功!")}}>
               <Download className="mr-2 w-4 h-4"></Download>
               <div>下载</div>
             </DropdownMenuItem>

@@ -34,7 +34,7 @@ export const AlterModal: React.FC<AlterModalProps> = ({
       isOpen={isOpen}
       onClose={onClose}
     >
-      <div className="py-2 space-x-2 flex items-center justify-end w-full">
+      <div className="xs:py-2 space-x-2 flex items-center justify-end w-full rounded-md">
         <Button variant="outline" disabled={loading} onClick={onClose}>
           取消 
         </Button>

@@ -16,7 +16,7 @@ const AdminPage = () => {
   const { data, isError, isLoading, isSuccess, isPending, error,status } = useQuery({
     queryKey: ["keys"],
     queryFn: () => getAdmin(),
-    staleTime: 1000 * 120,
+    staleTime: 1000 * 60,
   });
 
   isError && router.push("/");

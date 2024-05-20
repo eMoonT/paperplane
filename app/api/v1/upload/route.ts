@@ -27,6 +27,7 @@ export async function POST(req: Request, res: NextResponse) {
 
   try {
     const data = await req.formData();
+    const expire = data.get("expire");
     const file: File | null = data.get("file") as unknown as File;
 
     if (!file) {
@@ -41,17 +42,29 @@ export async function POST(req: Request, res: NextResponse) {
     // await writeFile(path, buffer);
     // console.log(`open ${path} to see the uploaded file`);
 
-    const preSignedUrl = await getSignedUrl(
-      R2,
-      new PutObjectCommand({
-        Bucket: R2_BUCKET_NAME,
-        Key: `resources/${uuidv4()}/${file.name}`,
-        ContentType: file.type,
-      }),
-      {
-        expiresIn: 60 * 60 * 24 * 7,
-      }
-    );
+    let preSignedUrl;
+    if (Number(expire) !== 0) {
+      preSignedUrl = await getSignedUrl(
+        R2,
+        new PutObjectCommand({
+          Bucket: R2_BUCKET_NAME,
+          Key: `resources/${uuidv4()}/${file.name}`,
+          ContentType: file.type,
+        }),
+        {
+          expiresIn: 60 * 60 * 24 * Number(expire),
+        }
+      );
+    } else {
+      preSignedUrl = await getSignedUrl(
+        R2,
+        new PutObjectCommand({
+          Bucket: R2_BUCKET_NAME,
+          Key: `resources/${uuidv4()}/${file.name}`,
+          ContentType: file.type,
+        })
+      );
+    }
 
     const file_url = preSignedUrl
       .split("?")[0]
@@ -70,7 +83,6 @@ export async function POST(req: Request, res: NextResponse) {
       { status: 200 }
     );
   } catch (error) {
-    console.error(error);
-    return NextResponse.json({ message: "Error" }, { status: 500 });
+    return new NextResponse(`Server error`, { status: 500 });
   }
 }

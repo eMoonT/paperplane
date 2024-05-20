@@ -2,8 +2,14 @@
 import { NextResponse, NextRequest } from "next/server";
 import { getRequestContext } from "@cloudflare/next-on-pages";
 import dayjs from "dayjs";
+import timezone from "dayjs/plugin/timezone";
+import utc from 'dayjs/plugin/utc'
+import { ParamData } from "@/types";
 
 export const runtime = "edge";
+
+dayjs.extend(utc)
+dayjs.extend(timezone)
 
 type metadataProps = {
   expire: string;
@@ -11,7 +17,7 @@ type metadataProps = {
 };
 export async function GET(
   request: Request,
-  { params }: { params: { key: string } },
+  { params }: { params: { key: string } }
 ) {
   try {
     const MY_KV = getRequestContext().env.KV_TEST;
@@ -23,7 +29,7 @@ export async function GET(
     if (kvValue === null) {
       return NextResponse.json({ key: params.key, status: 1 });
     }
-    const data = {
+    const data: ParamData = {
       key: params.key,
       value: kvValue,
       status: 0,
@@ -32,37 +38,48 @@ export async function GET(
     };
     return NextResponse.json(data);
   } catch (error) {
-    return new NextResponse("Internet error", { status: 400 });
+    return new NextResponse("Server error", { status: 500 });
   }
 }
 
 export async function POST(
   request: Request,
-  { params }: { params: { data: string[] } },
+  { params }: { params: { data: string[] } }
 ) {
   try {
     const body: any = await request.json();
     const { code, text, expire, type } = body;
     const MY_KV = getRequestContext().env.KV_TEST;
 
-    const now = dayjs();
-    const secendTime = Number(expire) * 60 * 60 * 24;
+    let formattedTime, secendTime, futureTime;
+    if (Number(expire) !== 0) {
+      const now = dayjs();
+      secendTime = Number(expire) * 60 * 60 * 24;
 
-    const futureTime = now.add(secendTime, "second");
-    const formattedTime = futureTime.format("YYYY-MM-DD HH:mm:ss");
+      futureTime = now.add(secendTime, "second");
+      formattedTime = futureTime.tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm:ss");
+      console.log(formattedTime)
 
-    await MY_KV.put(code, text, {
-      expirationTtl: secendTime,
-      metadata: { expireTime: formattedTime, content: text, type },
-    });
-    return NextResponse.json({
+      await MY_KV.put(code, text, {
+        expirationTtl: secendTime,
+        metadata: { expireTime: formattedTime, content: text, type },
+      });
+    } else {
+      formattedTime = "1970-01-01 00:00:00";
+      await MY_KV.put(code, text, {
+        metadata: { expireTime: formattedTime, content: text, type },
+      });
+    }
+
+    const data: ParamData = {
       key: code,
       value: text,
       status: 0,
       expireTime: formattedTime,
       type,
-    });
+    };
+    return NextResponse.json(data);
   } catch (error) {
-    return new NextResponse(`Internet error: ${error}`, { status: 400 });
+    return new NextResponse(`Server error: ${error}`, { status: 500 });
   }
 }

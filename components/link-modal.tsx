@@ -21,7 +21,7 @@ const LinkModal: React.FC<LinkModalProps> = ({ isOpen, onClose, code }) => {
       >
         <div className="xs:w-[480px] w-4/5 h-2/6 xs:h-2/5 px-2 py-4 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-lg shadow-xl flex flex-col justify-center items-center fixed ">
           <ArrowLeft
-            size={25}
+            size={23}
             onClick={onClose}
             className="absolute left-4 top-4 text-gray-600 dark:text-gray-300 cursor-pointer"
           />

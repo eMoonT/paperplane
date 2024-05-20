@@ -77,8 +77,8 @@ const BoardModal: React.FC<BoardModalProps> = ({
               isUpload ? "hidden" : ""
             )}
           ></textarea>
-          <div className="p-2 h-full">
-            <UploadFile isUpload={isUpload} />
+          <div className="p-2 h-full w-[280px] xs:w-full">
+            <UploadFile expire={expire} isUpload={isUpload} />
           </div>
           <div
             className={cn(

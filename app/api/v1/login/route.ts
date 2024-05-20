@@ -38,7 +38,7 @@ export async function POST(request: Request) {
       // Redirect the user back to the login page if the password is incorrect
       return NextResponse.json({message: `Fail`}, {
         // a 200 status is required to redirect from a POST to a GET route
-        status: 401,
+        status: 201,
       });
     }
 

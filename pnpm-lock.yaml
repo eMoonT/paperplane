@@ -89,6 +89,9 @@ importers:
       tailwindcss-animate:
         specifier: ^1.0.7
         version: 1.0.7(tailwindcss@3.4.3(ts-node@10.9.1(@types/node@20.12.10)(typescript@5.4.5)))
+      timezone:
+        specifier: link:dayjs/plugin/timezone
+        version: link:dayjs/plugin/timezone
       uuid:
         specifier: ^9.0.1
         version: 9.0.1

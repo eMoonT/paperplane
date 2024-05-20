@@ -40,6 +40,7 @@
     "sm-crypto-v2": "^1.9.0",
     "tailwind-merge": "^2.3.0",
     "tailwindcss-animate": "^1.0.7",
+    "timezone": "link:dayjs/plugin/timezone",
     "uuid": "^9.0.1",
     "zustand": "^4.5.2"
   },

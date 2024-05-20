@@ -9,6 +9,7 @@ import ContentModal from "@/components/content-modal";
 import axios from "axios";
 import toast from "react-hot-toast";
 import { generateCode } from "@/actions/get-code";
+import { ParamData } from "@/types";
 
 
 export default function Home() {
@@ -19,7 +20,7 @@ export default function Home() {
 
   const [theme, setTheme] = useState<string>("");
 
-  const dataContentRef = useRef(null);
+  const dataContentRef = useRef<ParamData>();
   const codeRef = useRef<number>(0);
 
   useEffect(() => {
@@ -86,16 +87,16 @@ export default function Home() {
   };
 
   const receive = async () => {
-    const res = await axios.get(`/api/v1/${codeInput}`);
+    const { data } = await axios.get<ParamData>(`/api/v1/${codeInput}`);
 
-    if (res.data.status === 0) {
-      setClipboardData(res.data.value);
+    if (data.status === 0) {
+      setClipboardData(data.value);
       toggleCodeModal();
       toggleContentModal();
-      dataContentRef.current = res.data;
+      dataContentRef.current = data;
     }
 
-    if (res.data.status === 1) {
+    if (data.status === 1) {
       toast.error("提取码不存在!");
     }
   };
@@ -160,7 +161,7 @@ export default function Home() {
         <ContentModal
           isOpen={isContentModalOpen}
           onClose={toggleContentModal}
-          data={dataContentRef.current}
+          data={dataContentRef.current!}
         />
         <span className="absolute bottom-2 dark:text-gray-300 text-gray-500 text-sm">
           © 2024{" "}
