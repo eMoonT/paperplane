@@ -25,6 +25,7 @@ export type newKeysItemList = {
   expireTime: string;
   type?: number;
   id?: number;
+  url?: string;
 };
 
 export type ParamData = {
@@ -33,4 +34,5 @@ export type ParamData = {
   status: number;
   expireTime: string;
   type: number;
+  url?: string;
 };

@@ -3,7 +3,6 @@ import { X, ArrowLeft, Upload } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { UploadFile } from "./upload-file";
 
-
 interface BoardModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -23,14 +22,13 @@ const BoardModal: React.FC<BoardModalProps> = ({
   const [expire, setExpire] = useState<number>(7);
 
   const [isUpload, setIsUpload] = useState<boolean>(false);
+  const [disabled, setDisabled] = useState<boolean>(true);
 
   useEffect(() => {
     textareaRef.current?.focus();
-  }, [isOpen]);
-
-  useEffect(() => {
     setExpire(7);
-  }, [onClose]);
+    clipboardData.length === 0 ? setDisabled(true) : setDisabled(false);
+  }, [isOpen, onClose, clipboardData]);
 
   return (
     <>
@@ -96,17 +94,19 @@ const BoardModal: React.FC<BoardModalProps> = ({
               />
             </span>
             <div className="flex justify-center items-center gap-4">
-              <Upload
-                onClick={() => setIsUpload(!isUpload)}
-                size={40}
-                className="text-blue-500 hover:bg-gray-300 dark:hover:bg-[rgba(255,255,255,0.05)] p-2 hover:rounded-md"
-              />
+              <button title="上传文件" onClick={() => setIsUpload(!isUpload)}>
+                <Upload
+                  size={40}
+                  className="text-blue-500 hover:bg-gray-300 dark:hover:bg-[rgba(255,255,255,0.05)] p-2 hover:rounded-md"
+                />
+              </button>
               <button
                 onClick={() => {
                   send(expire);
                   setExpire(7);
                 }}
-                className="relative inline-flex items-center justify-center w-[50px] xs:w-[90px] h-10 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                disabled={disabled}
+                className="disabled:opacity-50 disabled:cursor-not-allowed relative inline-flex items-center justify-center w-[50px] xs:w-[90px] h-10 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 发送
               </button>

@@ -1,6 +1,6 @@
 import { KeysItem, KeysItemList, newKeysItemList } from "@/types";
 import axiosInstance from "@/lib/axios-instance";
-import axios from "axios";
+// import axios from "axios";
 
 const getAdmin = async (): Promise<newKeysItemList[]> => {
   const response = await axiosInstance.get(`/admin`);
@@ -27,5 +27,6 @@ const getAdmin = async (): Promise<newKeysItemList[]> => {
 
   return dataWithId;
 };
+
 
 export { getAdmin };

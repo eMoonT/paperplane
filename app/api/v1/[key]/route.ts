@@ -14,6 +14,7 @@ dayjs.extend(timezone)
 type metadataProps = {
   expire: string;
   type: number;
+  url: string;
 };
 export async function GET(
   request: Request,
@@ -35,6 +36,7 @@ export async function GET(
       status: 0,
       expireTime: (metadata as metadataProps).expire,
       type: (metadata as metadataProps).type,
+      url: (metadata as metadataProps).url,
     };
     return NextResponse.json(data);
   } catch (error) {
@@ -51,6 +53,8 @@ export async function POST(
     const { code, text, expire, type } = body;
     const MY_KV = getRequestContext().env.KV_TEST;
 
+    const url =  request.url.split('/api')[0] + `/${code}`
+
     let formattedTime, secendTime, futureTime;
     if (Number(expire) !== 0) {
       const now = dayjs();
@@ -58,16 +62,15 @@ export async function POST(
 
       futureTime = now.add(secendTime, "second");
       formattedTime = futureTime.tz("Asia/Shanghai").format("YYYY-MM-DD HH:mm:ss");
-      console.log(formattedTime)
 
       await MY_KV.put(code, text, {
         expirationTtl: secendTime,
-        metadata: { expireTime: formattedTime, content: text, type },
+        metadata: { expireTime: formattedTime, content: text, type, url },
       });
     } else {
       formattedTime = "1970-01-01 00:00:00";
       await MY_KV.put(code, text, {
-        metadata: { expireTime: formattedTime, content: text, type },
+        metadata: { expireTime: formattedTime, content: text, type, url },
       });
     }
 
@@ -77,6 +80,7 @@ export async function POST(
       status: 0,
       expireTime: formattedTime,
       type,
+      url
     };
     return NextResponse.json(data);
   } catch (error) {

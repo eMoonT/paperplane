@@ -1,6 +1,11 @@
+import { useState } from "react";
 import CopyToClipboard from "react-copy-to-clipboard";
 import toast from "react-hot-toast";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Share2 } from "lucide-react";
+import QRCode from "qrcode.react";
+import { getKey } from "@/actions/get-key";
+import Link from "next/link";
+import { copyToClipboard } from "@/lib/utils";
 
 interface LinkModalProps {
   isOpen: boolean;
@@ -9,6 +14,15 @@ interface LinkModalProps {
 }
 
 const LinkModal: React.FC<LinkModalProps> = ({ isOpen, onClose, code }) => {
+  const [isShare, setIsShare] = useState<boolean>(false);
+  const [shareUrl, setShareUrl] = useState<string>("");
+
+  const handleShare = async () => {
+    const { url } = await getKey(String(code));
+    setShareUrl(url!);
+    setIsShare(!isShare);
+  };
+
   const handleCopy = () => {
     toast.success("复制成功");
   };
@@ -25,12 +39,42 @@ const LinkModal: React.FC<LinkModalProps> = ({ isOpen, onClose, code }) => {
             onClick={onClose}
             className="absolute left-4 top-4 text-gray-600 dark:text-gray-300 cursor-pointer"
           />
-          <CopyToClipboard text={String(code)} onCopy={handleCopy}>
-            <h1 className="text-6xl file items-center justify-center text-gray-700 dark:text-gray-100 cursor-pointer">
-              {code}
-            </h1>
-          </CopyToClipboard>
-          <p className="m-3 text-gray-400 cursor-pointer" onClick={handleCopy}>发送成功，点击保存提取码</p>
+          <Share2
+            size={23}
+            onClick={handleShare}
+            className="absolute right-4 top-4 text-gray-600 dark:text-gray-300 cursor-pointer"
+          />
+          {!isShare ? (
+            <div className="flex flex-col items-center justify-center space-y-5">
+              <CopyToClipboard text={String(code)} onCopy={handleCopy}>
+                <h1 className="text-6xl file items-center justify-center text-gray-700 dark:text-gray-100 cursor-pointer">
+                  {code}
+                </h1>
+              </CopyToClipboard>
+              <p
+                className="m-3 text-gray-400 cursor-pointer xs:text-lg text-sm"
+                onClick={() => {
+                  "clipboard" in navigator
+                    ? navigator.clipboard.writeText(String(code))
+                    : copyToClipboard(String(code));
+                  toast.success("复制成功");
+                }}
+              >
+                发送成功，点击保存提取码
+              </p>
+            </div>
+          ) : (
+            <div>
+              {!!shareUrl && (
+                <div className="flex flex-col justify-center items-center space-y-0 xs:space-y-5">
+                  <QRCode value={shareUrl} size={200} className="xs:p-0 p-8" />
+                  <Link href={shareUrl} className="text-sm xs:text-xl">
+                    {shareUrl}
+                  </Link>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
     </>

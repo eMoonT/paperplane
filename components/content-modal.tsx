@@ -2,7 +2,8 @@ import CopyToClipboard from "react-copy-to-clipboard";
 import toast from "react-hot-toast";
 import { ArrowLeft, Download } from "lucide-react";
 import { ParamData } from "@/types";
-import { downloadFile } from "@/lib/utils";
+import { copyToClipboard, downloadFile } from "@/lib/utils";
+import Image from "next/image";
 
 interface ContentModalProps {
   isOpen: boolean;
@@ -25,7 +26,7 @@ const ContentModal: React.FC<ContentModalProps> = ({
           isOpen ? "bg-gray-900 bg-opacity-75" : "hidden"
         }`}
       >
-        <div className="xs:w-[480px] w-4/5 h-2/6 xs:h-2/5 px-4 py-2 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-lg shadow-xl flex flex-col justify-center items-center fixed">
+        <div className="xs:w-[480px] w-4/5 h-2/6 xs:h-2/5 px-4 py-2 bg-white dark:bg-[rgba(30,30,30,1.5)] rounded-lg shadow-xl flex flex-col justify-center items-center relative">
           {data?.type === 1 ? (
             <Download
               size={23}
@@ -44,7 +45,7 @@ const ContentModal: React.FC<ContentModalProps> = ({
           ["jpeg", "jpg", "png", "bmp", "gif", "tiff", "svg", "webp"].some(
             (word) => data?.value.toLowerCase().includes(word)
           ) ? (
-            <img src={data?.value} alt="img" className="w-[85%] h-[75%] rounded-md" />
+            <Image src={data?.value} alt={data?.key} sizes="100vw" width={100} height={80} className="w-[85%] h-[75%] rounded-md"/>
           ) : (
             <CopyToClipboard text={data?.value} onCopy={handleCopy}>
               {/* <h1 className="text-4xl">{data?.value}</h1> */}
@@ -61,7 +62,7 @@ const ContentModal: React.FC<ContentModalProps> = ({
                       onClose();
                     }
                   }}
-                  className="w-full pt-8 pl-4 border-none rounded-md outline-none resize-none text-gray-700 dark:text-gray-100 bg-[rgba(0,0,0,0.05)] dark:bg-[rgba(255,255,255,0.05)] cursor-pointer"
+                  className="w-full pt-4 pl-4 border-none rounded-md outline-none resize-none text-gray-700 dark:text-gray-100 bg-[rgba(0,0,0,0.05)] dark:bg-[rgba(255,255,255,0.05)] cursor-pointer"
                 ></textarea>
               ) : (
                 <pre className="w-full text-lg flex items-center justify-center text-gray-700 dark:text-gray-100 overflow-hidden text-ellipsis cursor-pointer">
@@ -73,7 +74,8 @@ const ContentModal: React.FC<ContentModalProps> = ({
           <p
             className="m-3 text-gray-400 cursor-pointer hover:underline hover:text-blue-300"
             onClick={() => {
-              navigator.clipboard.writeText(data?.value);
+              'clipboard' in navigator ? 
+              navigator.clipboard.writeText(data?.value) : copyToClipboard(data?.value)
               toast.success("复制成功");
             }}
           >

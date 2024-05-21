@@ -11,7 +11,6 @@ import toast from "react-hot-toast";
 import { generateCode } from "@/actions/get-code";
 import { ParamData } from "@/types";
 
-
 export default function Home() {
 
   const [clipboardData, setClipboardData] = useState<string>("");

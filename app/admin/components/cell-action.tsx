@@ -7,7 +7,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { KeysColumn } from "./columns";
 import { Button } from "@/components/ui/button";
-import { Copy, MoreHorizontal, Trash, Download } from "lucide-react";
+import { Copy, MoreHorizontal, Trash, Download, Kanban } from "lucide-react";
 import toast from "react-hot-toast";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -16,7 +16,7 @@ import { AlterModal } from "@/components/alter-modal";
 import { deleteKey } from "@/actions/multiple-delete";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { newKeysItemList } from "@/types";
-import { downloadFile } from "@/lib/utils";
+import { downloadFile, copyToClipboard } from "@/lib/utils";
 
 interface CellActionProps {
   data: KeysColumn;
@@ -76,7 +76,9 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
   // };
 
   const onCopy = (id: string) => {
-    navigator.clipboard.writeText(id);
+    "clipboard" in navigator
+      ? navigator.clipboard.writeText(id)
+      : copyToClipboard(id);
     toast.success("复制成功!");
   };
 
@@ -97,8 +99,21 @@ const CellAction: React.FC<CellActionProps> = ({ data }) => {
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end">
           <DropdownMenuLabel>操作</DropdownMenuLabel>
+          <DropdownMenuItem
+            onClick={() => {
+              router.push(`/${data.name}`);
+            }}
+          >
+            <Kanban className="mr-2 w-4 h-4"></Kanban>
+            <div>查看</div>
+          </DropdownMenuItem>
           {data.type === 1 && (
-            <DropdownMenuItem onClick={() => {downloadFile(data.content);toast.success("下载成功!")}}>
+            <DropdownMenuItem
+              onClick={() => {
+                downloadFile(data.content);
+                toast.success("下载成功!");
+              }}
+            >
               <Download className="mr-2 w-4 h-4"></Download>
               <div>下载</div>
             </DropdownMenuItem>
