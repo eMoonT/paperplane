@@ -67,32 +67,12 @@
 }
 
 @layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
   input[type="number"]::-webkit-inner-spin-button,
   input[type="number"]::-webkit-outer-spin-button {
     -webkit-appearance: none;
     margin: 0;
   }
-  .ant-upload-wrapper > a {
-    color: #3c68e2!important;
-  }
-  .ant-upload-icon {
-    color: white!important;
-  }
-  .ant-upload-wrapper .ant-upload-list .ant-upload-list-item .ant-upload-list-item-name {
-    overflow: hidden!important;
-    white-space: nowrap!important;
-    text-overflow: ellipsis!important;
-    padding: 0 8px!important;
-    line-height: 1.5714285714285714!important;
-    flex: auto!important;
-    transition: all 0.3s!important;
-    color: white!important;
-    margin-top: 10px!important;
+  :global(body > div.flex.justify-center.items-center.h-screen.flex-col.gap-y-3.bg-white.dark\:bg-black > div.fixed.inset-0.z-50.flex.items-center.justify-center.bg-gray-900.bg-opacity-75 > div > div.p-2.h-full.w-\[280px\].xs\:w-full > div > span > div.ant-upload-list.ant-upload-list-text > div > div > a) {
+    color: red;
   }
 }

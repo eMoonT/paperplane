@@ -8,7 +8,8 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { ParamData } from "@/types";
 import { cn, copyToClipboard, downloadFile } from "@/lib/utils";
-import Image from "next/image";
+// import Image from "next/image";
+import { Image } from 'antd';
 
 export const runtime = "edge";
 
@@ -55,7 +56,17 @@ const Show = ({ params }: { params: { key: string } }) => {
               </div>
               {data?.value ? (
                 <div className="relative">
-                  {data?.type === 1 ? (
+                  {data?.type === 1 &&
+                  [
+                    "jpeg",
+                    "jpg",
+                    "png",
+                    "bmp",
+                    "gif",
+                    "tiff",
+                    "svg",
+                    "webp",
+                  ].some((word) => data?.value.toLowerCase().includes(word))  ? (
                     <Download
                       size={20}
                       onClick={() => downloadFile(data?.value)}
@@ -74,7 +85,7 @@ const Show = ({ params }: { params: { key: string } }) => {
                       )}
                     />
                   )}
-                  {data?.type === 1 &&
+                  {data?.type === 1 && 
                   [
                     "jpeg",
                     "jpg",
@@ -88,10 +99,10 @@ const Show = ({ params }: { params: { key: string } }) => {
                     <Image
                       src={data?.value}
                       alt={data.key}
-                      sizes="100vw"
-                      width={200}
-                      height={400}
-                      className="w-[300px] md:w-[400px] rounded-md"
+                      // sizes="100vw"
+                      width={300}
+                      // height={400}
+                      className="rounded-md"
                     />
                   ) : (
                     <div className="overflow-hidden flex justify-center items-center">

@@ -3,7 +3,8 @@ import toast from "react-hot-toast";
 import { ArrowLeft, Download } from "lucide-react";
 import { ParamData } from "@/types";
 import { copyToClipboard, downloadFile } from "@/lib/utils";
-import Image from "next/image";
+// import Image from "next/image";
+import { Image } from 'antd';
 
 interface ContentModalProps {
   isOpen: boolean;
@@ -45,7 +46,7 @@ const ContentModal: React.FC<ContentModalProps> = ({
           ["jpeg", "jpg", "png", "bmp", "gif", "tiff", "svg", "webp"].some(
             (word) => data?.value.toLowerCase().includes(word)
           ) ? (
-            <Image src={data?.value} alt={data?.key} sizes="100vw" width={100} height={80} className="w-[85%] h-[75%] rounded-md"/>
+            <Image src={data?.value} alt={data?.key}  width={120} className="rounded-md"/>
           ) : (
             <CopyToClipboard text={data?.value} onCopy={handleCopy}>
               {/* <h1 className="text-4xl">{data?.value}</h1> */}

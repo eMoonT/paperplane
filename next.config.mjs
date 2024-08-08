@@ -10,6 +10,7 @@ const nextConfig = {
   images: {
     domains: [
       'r2-pan.xingmel.top',
+      'img.xingmel.top',
       'pub-f74fab82be6745f2973c207d5cc433f2.r2.dev',
     ]
   }

@@ -1,7 +1,7 @@
 import { ColumnDef, FilterFn } from "@tanstack/react-table";
 import CellAction from "./cell-action";
-import { Checkbox } from "antd";
-import Image from "next/image";
+import { Checkbox, Image } from "antd";
+// import Image from "next/image";
 
 // import {
 //   RankingInfo,
@@ -59,11 +59,11 @@ export const columns: ColumnDef<KeysColumn>[] = [
     accessorKey: "content",
     header: "Value",
     cell: ({ row }) =>
-      row.original.type === 1 &&
+      // row.original.type === 1 &&
       ["jpeg", "jpg", "png", "bmp", "gif", "tiff", "svg", "webp"].some((word) =>
         row.original.content.includes(word)
       ) ? (
-        <Image src={row.original.content} alt={row.original.name} sizes="100vw" width={200} height={400} className="w-[200px] md:w-[400px] rounded-md" />
+        <Image src={row.original.content} alt={row.original.name} width={300} className="rounded-md" />
       ) : row.original.content.length > 25 ? (
         <pre className="w-[200px] md:w-[400px] lg:w-[600px] xl:w-[800px] overflow-hidden text-ellipsis">
           {row.original.content /*.substring(0, 100) + "..."*/}
